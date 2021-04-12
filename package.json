@@ -1,0 +1,15 @@
+{
+  "name": "eapp-uni",
+  "version": "0.1.3",
+  "description": "eapp for uniapp",
+  "main": "src/index.js",
+  "scripts": {
+    "install": "node runer.js install",
+    "uninstall": "node runer.js uninstall"
+  },
+  "author": "MrRen",
+  "license": "ISC",
+  "dependencies": {
+    
+  }
+}
