@@ -5,8 +5,7 @@ export default function (eapp) {
 
 
     eapp.ui = ui;
-    api.eapp = eapp;
-    eapp.http = api;
+    
     eapp.localData = {
         set(key, value) {
 
@@ -31,7 +30,9 @@ export default function (eapp) {
             uni.clearStorageSync();
         }
     };
-
+    api.eapp = eapp;
+	eapp.http = api;
+    
     eapp.window = {
         listener: {
             beforIn(url, next) {
@@ -145,12 +146,10 @@ export default function (eapp) {
     eapp.exit = function () {
 
         // #ifdef APP-PLUS
-        if (plus.os.name.toLowerCase() === 'android') {
+        if (uni.getSystemInfoSync().platform == 'ios'){
+            plus.ios.import("UIApplication").sharedApplication().performSelector("exit")
+        } else if (uni.getSystemInfoSync().platform == 'android'){
             plus.runtime.quit();
-        }
-        else {
-            ui.toast.text("请手动退出进程");
-
         }
         // #endif
 

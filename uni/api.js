@@ -17,6 +17,20 @@ function mk_on_success_option(options, onsuccess, error, native = false) {
                         this.eapp.user.onTokenExpired(result.data);
                         return;
                     }
+					if (result.data && result.data.error_type && (result.data.error_type === "auth")) {
+						if(this.eapp.user  &&  (typeof this.eapp.user.onTokenExpired === "function"))
+						{
+							this.eapp.localData.remove('token');
+							this.eapp.user.onTokenExpired(result.data);
+						}else{
+							this.eapp.localData.remove('token');
+							ui.alert("账号已经退出，请重新打开应用并登录",()=>{
+								this.eapp.exit();
+							})
+						}
+					   
+					    return;
+					}
                     if (error) {
                         if (native) ui.alert(result.msg)
                         else
@@ -41,6 +55,7 @@ function mk_on_success_option(options, onsuccess, error, native = false) {
 
 
 let api = {
+	eapp:null,
     setApiBase(_url_pre) {
 
         url_pre = _url_pre;
