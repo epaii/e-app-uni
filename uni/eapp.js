@@ -127,11 +127,20 @@ export default function (eapp) {
         },
         emit(name, data = null) {
             uni.$emit(name, data);
-        }
+        },
+        once(name, callback) {
+		    uni.$once(name, callback);
+		}
 
     }
 
     eapp.device = {
+        getLocation(callback){
+            uni.getLocation({
+			    type: 'wgs84',
+			    success: callback
+			})
+        },
         chooseLocation(callback) {
             uni.chooseLocation({
                 success: callback
@@ -139,7 +148,22 @@ export default function (eapp) {
         },
         makePhoneCall(phoneNumber) {
             uni.makePhoneCall({ phoneNumber: phoneNumber });
-        }
+        },
+		scanCode(callback,option =null){
+			let data = {
+			    success: function (res) {
+					callback(res.result)
+			    }
+			};
+			if(option !==null){
+				if(typeof option === "object"){
+					data = Object.assign(data,option);
+				}else if(typeof option === "boolean"){
+					data.onlyFromCamera = option;
+				}
+			}
+			uni.scanCode(data);
+		}
 
     }
 
