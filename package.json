@@ -1,6 +1,6 @@
 {
   "name": "eapp-uni",
-  "version": "0.1.8",
+  "version": "0.2.3",
   "description": "eapp for uniapp",
   "main": "src/index.js",
   "scripts": {

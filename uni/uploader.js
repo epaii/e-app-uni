@@ -1,5 +1,5 @@
 import ui from "./ui.js"
- 
+let config = require("../config");
 let upload_url;
 let uploader = {
 	setUploadApi(url) { 
@@ -10,6 +10,7 @@ let uploader = {
 	},
 	uploadFiles(tempFiles,callback,thisapi){
 		 
+		let uploadFile = config.functions.uploadFile;
 		 
 		if(!thisapi) thisapi = upload_url;
 		var outpath = [];
@@ -18,7 +19,7 @@ let uploader = {
  
 		for (var i in tempFiles) {
 			 
-			allthread.push(uni.uploadFile({
+			allthread.push(uploadFile({
 				url: thisapi,
 				filePath: tempFiles[i].path,
 				name: 'file',
@@ -59,13 +60,19 @@ let uploader = {
 		}
 	 
 		let that = this;
+		let  chooseImage = config.functions.chooseImage;
+		 
+		
 
-		uni.chooseImage(Object.assign({
+		chooseImage(Object.assign({
+			
+			
 			count: 9, // 默认9
 			sizeType: ['original', 'compressed'],
 			sourceType: ['album', 'camera'],
 			success: function(res) {
 				ui.loading();
+				 
 				uploader.uploadFiles(res.tempFiles,(res)=>{
 					callback(res.join(","));
 					ui.stopLoading();
@@ -73,6 +80,10 @@ let uploader = {
 			},
 			fail(res) {
 				// JSON.stringify(res)
+				console.log('--------------------------')
+				
+				console.log(res)
+				console.log('--------------------------')
 			}
 		}, options));
 
@@ -83,7 +94,7 @@ let uploader = {
 			url: fileUrl,
 			success: (res) => {
 				if (res.statusCode === 200) {
-					uni.saveImageToPhotosAlbum({
+					config.functions.saveImageToPhotosAlbum({
 						filePath: res.tempFilePath,
 						success: function() {
 							callback(res.tempFilePath);
@@ -99,7 +110,7 @@ let uploader = {
 	
 	shareUrl(title,url)
 	{
-		uni.shareWithSystem({
+		config.functions.shareWithSystem({
 			summary: title,
 			href: url,
 			success(){

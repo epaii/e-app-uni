@@ -1,4 +1,5 @@
 let isloading = false;
+let last_load_time = 0;
 export default {
 	showActionSheet(options) {
 		let keys = [];
@@ -64,16 +65,25 @@ export default {
 
 	},
 	loading(msg = "请稍等") {
+		if(isloading) return;
+		let n_time = new Date().getTime();
+		if(n_time-last_load_time<500){
+			return;
+		}
 		isloading = true;
 		uni.showToast({
-			title: "加载中",
+			title: msg,
 			icon: "loading",
 			duration: 20000
 		})
 	},
 	stopLoading() {
 		if (isloading)
+		{
 			this.stop_loading();
+			last_load_time = new Date().getTime();
+		}
+			
 		isloading = false;
 	},
 	stop_loading() {
