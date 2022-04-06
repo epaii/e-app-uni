@@ -20,7 +20,9 @@ let eapp = {
 		callback_s.forEach((f) => {
 			f()
 		})
+		isReady = true;
 	},
+	_config_:config,
 	extends: (callback) => {
 		callback.call(this)
 	},
