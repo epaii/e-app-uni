@@ -41,7 +41,7 @@ function mk_on_success_option(options, onsuccess, error, native = false) {
 				}
 			} else {
 				if (dataHandler && (typeof dataHandler === "function")) {
-					onsuccess(await dataHandler(result.data))
+					onsuccess(await dataHandler(result.data,options))
 				} else
 					onsuccess(result.data)
 			}
