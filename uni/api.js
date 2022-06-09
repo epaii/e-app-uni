@@ -4,7 +4,7 @@ let url_pre = "";
 let base_data = {};
 
 let dataHandler = null;
-
+let beforRequestHandler = null;
 function mk_on_success_option(options, onsuccess, error, native = false) {
 	options.complete = () => {
 		ui.stopLoading()
@@ -62,6 +62,9 @@ let api = {
 	setDataHander(handler) {
 		dataHandler = handler;
 	},
+	setBeforRequestHandler(handler) {
+		beforRequestHandler = handler;
+	},
 	eapp: null,
 	setApiBase(_url_pre) {
 
@@ -81,10 +84,10 @@ let api = {
 			ui.loading();
 
 			if (onsuccess)
-				api.post(uri, data, function() {
+				api.post(uri, data, function () {
 					ui.stop_loading();
 					onsuccess.apply(null, arguments);
-				}, function() {
+				}, function () {
 					ui.stop_loading();
 					if (onerror) onerror.apply(null, arguments)
 					else {
@@ -96,7 +99,7 @@ let api = {
 			else {
 
 				return new Promise((ok, error) => {
-					api.post(uri, data).then(function() {
+					api.post(uri, data).then(function () {
 
 						ui.stop_loading();
 						ok.apply(null, arguments);
@@ -128,12 +131,16 @@ let api = {
 		} else
 			options.url = this.eapp.config.api_url_base + uri
 
+		if (beforRequestHandler && (typeof beforRequestHandler === "function")) {
+			await beforRequestHandler(options);
+		}
+
 		if (onsuccess) {
 			mk_on_success_option.call(this, options, onsuccess, onerror)
 			if (!onerror) onerror = (xhr, status, error) => {
-				 
+
 			};
-			options.fail = function(msg){
+			options.fail = function (msg) {
 				ui.alert('网络异常')
 			};
 
