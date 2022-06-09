@@ -9,7 +9,7 @@ function mk_on_success_option(options, onsuccess, error, native = false) {
 	options.complete = () => {
 		ui.stopLoading()
 	};
-	options.success = (result) => {
+	options.success = async (result) => {
 		result = result.data
 		if (result && result.hasOwnProperty("code")) {
 			if (result.code === 0) {
@@ -41,7 +41,7 @@ function mk_on_success_option(options, onsuccess, error, native = false) {
 				}
 			} else {
 				if (dataHandler && (typeof dataHandler === "function")) {
-					onsuccess(dataHandler(result.data))
+					onsuccess(await dataHandler(result.data))
 				} else
 					onsuccess(result.data)
 			}
@@ -114,7 +114,7 @@ let api = {
 			}
 		}
 	},
-	post(uri, data = {}, onsuccess = null, onerror = null) {
+ 	async post(uri, data = {}, onsuccess = null, onerror = null) {
 		let options = {
 			method: "POST",
 			header: {
